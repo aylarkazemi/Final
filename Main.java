@@ -1,6 +1,5 @@
 public class Main {
     public static void main(String[] args){
-        Menue menue = new Menue();
-        menue.display();
+        Shop shop= new Shop("My shop","WWW.shop.com","123456");
     }
 }

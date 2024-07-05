@@ -6,6 +6,13 @@ public class Order {
     private double totalAmount;
     private Date orderDate;
     private boolean isConfirmed;
+    public double getTotalPrice(){
+        double totalPrice=0.0;
+        for (Product product : products){
+            totalPrice+=product.getPrice();
+        }
+        return totalPrice;
+    }
     public Order(int orderId, User user) {
         this.orderId = orderId;
         this.user = user;
