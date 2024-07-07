@@ -3,10 +3,12 @@ import java.util.*;
 public class User extends BaseInfo {
     private String phoneNumber;
     private String address;
-    private List<Product> shoppingCart; //==سبدخرید
-    private List<Order> orders;//==لیست سفارشات
-    private List<Product> purchasedProducts;//==لیست محصولات خریداری شده
-    private double wallet;//==کیف پول
+
+    private Cart cart;
+    private Wallet wallet;
+    private List<Product> shoppingCart;
+    private List<Order> orders;
+    private List<Product> purchasedProducts;
     public User(String username , String password , String email ,
                     String phoneNumber, String address){
         super(username,password,email);
@@ -15,19 +17,20 @@ public class User extends BaseInfo {
         this.shoppingCart=new ArrayList<>();
         this.orders=new ArrayList<>();
         this.purchasedProducts=new ArrayList<>();
-        this.wallet=0.0;
+        this.wallet=new Wallet();
+        this.cart=new Cart();
 
     }
     public String getPhoneNumber(){
         return phoneNumber;
     }
-    public void setPhoneNumber(){
+    public void setPhoneNumber(String phoneNumber){
         this.phoneNumber=phoneNumber;
     }
     public String getAddress(){
         return address;
     }
-    public void setAddress(){
+    public void setAddress(String address){
         this.address=address;
     }
     public List<Product> getShoppingCart(){
@@ -48,20 +51,31 @@ public class User extends BaseInfo {
     public void setPurchasedProducts(List<Product> purchasedProducts){
         this.purchasedProducts=purchasedProducts;
     }
-    public double getWallet(){
+    public Wallet getWallet(){
         return wallet;
     }
-    public void setWallet(double wallet){
-        this.wallet=wallet;
+    public Request createAddFundsRequest(double amount){
+        return new Request(this,amount);
     }
+    public Cart getCart(){
+        return cart;
+    }
+    public void addOrder(Order order){
+        orders.add(order);
+        purchasedProducts.addAll(order.getProducts());
+    }
+
     @Override
     public void displayAccountDetails(){
-        System.out.println("Customer user Account : ");
         System.out.println("Username : "+getUsername());
         System.out.println("Email : "+getEmail());
+        System.out.println("Password : "+getPassword());
         System.out.println("Phone number : " +getPhoneNumber());
-        System.out.println("Address" + address);
+        System.out.println("Address : " + getAddress());
         System.out.println("Wallet Balance: $"+wallet);
+        System.out.println("Cart: " + getCart());
+        System.out.println("Orders: " + orders);
+        System.out.println("Purchased Products: " + purchasedProducts);
     }
 
 }

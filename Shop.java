@@ -1,12 +1,17 @@
+import java.security.PrivateKey;
 import java.util.*;
 public class Shop {
     public String name;
     public String website;
     public String supportNumber;
+
     private List<Product> products;
     private List<Order> orders;
     private List<BaseInfo> baseInfos;
+
     private double totalProfit;
+    private List<Admin> adminApprovalRequests;
+    private List<AddFundsRequest> fundsRequests;
     public Shop(String name,String website,String supportNumber){
         this.name=name;
         this.website=website;
@@ -15,8 +20,11 @@ public class Shop {
         this.orders=new ArrayList<>();
         this.baseInfos=new ArrayList<>();
         this.totalProfit=0.0 ;
-        addPredefinedAdmin();
+        this.adminApprovalRequests=new ArrayList<>();
+        this.fundsRequests = new ArrayList<>();
+        addDefaultProducts();
     }
+
     public String getName(){
         return name;
     }
@@ -59,23 +67,45 @@ public class Shop {
     public double getTotalProfit(){
         return totalProfit;
     }
-    public void addProduct(Product product){
-        this.products.add(product);
-    }
     public void addOrder(Order order){
         this.orders.add(order);
         this.totalProfit+=order.getTotalPrice();
     }
-    //ezafe kardane accounte paye :
     public void addBaseInfo(BaseInfo baseInfo){
         this.baseInfos.add(baseInfo);
     }
-    public void displayShopDetails(){
-        System.out.println("Shop name : "+name);
-        System.out.println("Web Address : "+website);
-        System.out.println("Support Number : " + supportNumber);
-        System.out.println("Total Profit: $" + totalProfit);
+    public BaseInfo authenticate(String username,String password){
+        for (BaseInfo base : baseInfos){
+            if (base.getUsername().equals(username) && base.getPassword().equals(password)){
+                return base;
+            }
+        }
+        return null;
+    }
+    public void addProduct(Product product){
+        this.products.add(product);
+    }
 
+    private void addDefaultProducts() {
+        Category electronics = new Electronics();
+        Category clothing = new Cloths();
+        Category cosmetics = new Cosmetics();
+        Category goods = new Goods();
+        Category sports = new Sports();
+        products.add(new Product("Laptop", 1000, 10, electronics));
+        products.add(new Product("T-Shirt", 20, 50, clothing));
+        products.add(new Product("EyeLash", 15, 30, cosmetics));
+        products.add(new Product("Smartphone", 500, 20, goods));
+        products.add(new Product("Ball", 60, 40, sports));
+    };
+    public List<Product> searchProducts(String keyword){
+        List<Product> result = new ArrayList<>();
+        for (Product product : products){
+            if (product.getName().toLowerCase().contains(keyword.toLowerCase())){
+                result.add(product);
+            }
+        }
+        return result;
     }
     public void displayAllAccounts(){
         for (BaseInfo base : baseInfos){
@@ -83,12 +113,7 @@ public class Shop {
             System.out.println();
         }
     }
-    //ezafe kardane admine asli va avvalie
-    private void addPredefinedAdmin(){
-        Admin predefinedAdmin= new Admin("Admin1",
-                "1234","a@shop.com");
-        addBaseInfo(predefinedAdmin);
-    }
+
     public void addAdmin(Admin requestedAdmin,String username,String password,
                          String email){
         if (baseInfos.contains(requestedAdmin)){
@@ -104,13 +129,43 @@ public class Shop {
     public void addSeller(Seller seller){
         this.baseInfos.add(seller);
     }
-    public void approveSeller(Admin admin, Seller seller){
-        if (baseInfos.contains(admin) && admin instanceof Admin){
-            admin.approveSeller(seller);
-            System.out.println("Seller approved by admin : "+admin.getUsername());
-        }
-        else {
-            System.out.println("Only existing admins can approve sellers.");
-        }
+    public void addUser(User user){
+        this.baseInfos.add(user);
     }
+    public void approveSeller(Seller seller) {
+        seller.setApproved(true);
+    }
+    public BaseInfo getUserAccountByUsername(String username){
+        for (BaseInfo base : baseInfos){
+            if (base.getUsername().equals(username)){
+                return base;
+            }
+        }
+        return null;
+    }
+    public void addAdminRequest(Admin admin) {
+        adminApprovalRequests.add(admin);
+    }
+
+    public List<Admin> getAdminApprovalRequests() {
+        return adminApprovalRequests;
+    }
+
+    public void approveAdmin(Admin admin) {
+        admin.setApproved(true);
+        baseInfos.add(admin);
+        adminApprovalRequests.remove(admin);
+    }
+    public void addFundsRequest(AddFundsRequest request) {
+        fundsRequests.add(request);
+    }
+    public List<AddFundsRequest> getFundsRequests() {
+        return fundsRequests;
+    }
+    public void approveFundsRequest(AddFundsRequest request) {
+        request.getUser().addToWallet(request.getAmount());
+        fundsRequests.remove(request);
+    }
+
+
 }

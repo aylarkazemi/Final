@@ -22,5 +22,9 @@ public class Category {
             System.out.println(" - "+product.getName());
         }
     }
+    @Override
+    public String toString() {
+        return name;
+    }
 
 }

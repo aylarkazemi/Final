@@ -4,13 +4,13 @@ import java.util.List;
 public class Seller extends BaseInfo{
     private String companyName;
     private List<Product> productList;
-    private double wallet;
+    private Wallet wallet;
     private boolean isApproved;
     public Seller(String username,String password,String email,String companyName){
         super(username,password,email);
         this.companyName=companyName;
         this.productList=new ArrayList<>();
-        this.wallet=0.0;
+        this.wallet=new Wallet();
         this.isApproved=false;
     }
     public String getCompanyName(){
@@ -25,11 +25,14 @@ public class Seller extends BaseInfo{
     public void setProductList(List<Product> productList){
         this.productList=productList;
     }
-    public double getWallet(){
+    public Wallet getWallet(){
         return wallet;
     }
-    public void setWallet(double wallet){
+    public void setWallet(Wallet wallet){
         this.wallet=wallet;
+    }
+    public void approve() {
+        this.isApproved = true;
     }
     public boolean isApproved(){
         return isApproved;
@@ -46,13 +49,17 @@ public class Seller extends BaseInfo{
             System.out.println("Seller is not approved to add products");
         }
     }
-    @Override
+    public void requestApproval() {
+        // Logic to send a request for approval can be implemented here
+        System.out.println("Request for approval has been sent to the admin.");}
+
+        @Override
     public void displayAccountDetails(){
         System.out.println("Seller user Account : ");
         System.out.println("Company NAME : "+companyName);
         System.out.println("Email : "+getEmail());
         System.out.println("Wallet balance : $" +wallet);
-        System.out.println("Approved status : " + isApproved);
+        System.out.println("Approved: " + (isApproved ? "Yes" : "No"));
     }
 
 

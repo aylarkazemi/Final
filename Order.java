@@ -65,5 +65,8 @@ public class Order {
     }
     public boolean isConfirmed() {
         return isConfirmed; }
+    public List<Product> getProducts(){
+        return products;
+    }
     }
 

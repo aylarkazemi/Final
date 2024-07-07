@@ -23,3 +23,8 @@ class Goods extends Category {
         super("Goods");
     }
 }
+class Sports extends Category {
+    public Sports() {
+        super("sports");
+    }
+}
